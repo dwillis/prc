@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Politico Reverse Chron</title>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+    <style type="text/css">
+    body { font-family: 'Helvetica Neue', Helvetica; font-weight: 300; padding: 20px;}
+    th { text-align: left; }
+    th, td { padding: 0 1em 0.5ex 0;}
+    th.center, td.center { text-align: center; }
+    th.num, td.num { text-align: right; }
+    </style>
+</head>
+<body>
+
+    <h3>The Politico Reverse Chron</h3>
+    <h4>The latest 50 stories</h4>
+    <script>
+
+    // the table rows, typically loaded from data file using d3.csv
+
+    var stories; // a global
+
+    d3.json("http://www.politico.com/feeds/core_latestStoriesOnPolitico.json", function(error, json) {
+      if (error) return console.warn(error);
+      stories = json['storyList'];
+      var format = d3.time.format("%M, %d %Y %H:%M:%S");
+      stories.sort(function(a,b) {
+        return b.SORTDATE - a.SORTDATE;
+      });
+      console.log(stories);
+
+      // column definitions
+      var columns = [
+          { head: 'Story', cl: 'title', html: function(row) { return '<a href="http://www.politico.com'+row.PERMALINK+'">'+row.HEADLINE+'</a>'; } },
+          { head: 'Reporters', cl: 'center', html: ƒ('REPORTERS') },
+          { head: 'Published', cl: 'center', html: ƒ('PUBLISHDATESTORYSTAMP') },
+          { head: 'Updated', cl: 'num', html: ƒ('UPDATEDATESTORYSTAMP') },
+          { head: 'Magazine?', cl: 'num', html: ƒ('ISMAGAZINE') }
+      ];
+
+      // create table
+      var table = d3.select('body')
+          .append('table');
+
+      // create table header
+      table.append('thead').append('tr')
+          .selectAll('th')
+          .data(columns).enter()
+          .append('th')
+          .attr('class', ƒ('cl'))
+          .text(ƒ('head'));
+
+      // create table body
+      table.append('tbody')
+          .selectAll('tr')
+          .data(stories).enter()
+          .append('tr')
+          .selectAll('td')
+          .data(function(row, i) {
+              return columns.map(function(c) {
+                  // compute cell values for this specific row
+                  var cell = {};
+                  d3.keys(c).forEach(function(k) {
+                      cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+                  });
+                  return cell;
+              });
+          }).enter()
+          .append('td')
+          .html(ƒ('html'))
+          .attr('class', ƒ('cl'));
+      });
+
+    </script>
+</body>
+</html>
