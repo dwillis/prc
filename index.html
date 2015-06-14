@@ -5,18 +5,27 @@
     <meta charset="utf-8">
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
-    <style type="text/css">
-    body { font-family: 'Helvetica Neue', Helvetica; font-weight: 300; padding: 20px;}
-    th { text-align: left; }
-    th, td { padding: 0 1em 0.5ex 0;}
-    th.center, td.center { text-align: center; }
-    th.num, td.num { text-align: right; }
-    </style>
+    <script src="dist/js/adcom.js"></script>
+    <link rel="stylesheet" href="dist/css/adcom.css">
 </head>
 <body>
 
-    <h3>The Politico Reverse Chron</h3>
-    <h4>The latest 50 stories</h4>
+  <div class="navbar navbar-default navbar-primary">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand">The Politico Reverse Chron</a>
+    </div>
+    <ul class="nav navbar-nav navbar-left">
+      <li class="navbar-summary"><span>The latest 50 stories</span></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right navbar-bits">
+      <li><a href="#"></a></li>
+    </ul>
+  </div>
+</div>
+
+  <div class="container">
+    <div class="table-responsive">
     <script>
 
     // the table rows, typically loaded from data file using d3.csv
@@ -30,7 +39,6 @@
       stories.sort(function(a,b) {
         return b.SORTDATE - a.SORTDATE;
       });
-      console.log(stories);
 
       // column definitions
       var columns = [
@@ -43,7 +51,8 @@
 
       // create table
       var table = d3.select('body')
-          .append('table');
+          .append('table')
+          .attr('class', 'table table-striped');
 
       // create table header
       table.append('thead').append('tr')
@@ -75,5 +84,7 @@
       });
 
     </script>
+  </div>
+  </div>
 </body>
 </html>
